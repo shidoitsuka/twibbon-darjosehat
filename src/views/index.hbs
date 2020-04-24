@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Darjo Sehat</title>
+    <style>
+        .custom-file,
+        #inputGambar,
+        .upload-btn {
+            cursor: pointer;
+        }
+
+        canvas {
+            width: 720px;
+            height: 1px;
+        }
+    </style>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/css/mdb.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">Lawan Corona by Darjo Sehat</h1>
+        <hr />
+        <div class="row d-flex justify-content-center">
+            <div class="col-5">
+                <div class="input-group">
+                    <div class="input-group-prepend upload-btn">
+                        <span class="input-group-text upload-btn" onclick="generate();">Upload</span>
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputGambar" />
+                        <label class="custom-file-label">Choose file</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <button onclick="downloadImage();" type="button" id="download-btn" class="btn btn-primary px-3"><i
+                        class="fas fa-file-download"></i>
+                    Download</button>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <canvas id="generated" width="1080" height="1080"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/js/mdb.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#download-btn").hide();
+        });
+        let base_img = new Image();
+        base_img.src = "/assets/twibbon.png";
+        function downloadImage() {
+            const canvas = document.getElementById("generated");
+            const imageToDownload = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+            const presudoLink = document.createElement('a');
+            presudoLink.href = imageToDownload;
+            presudoLink.download = 'DarjoSehat-LawanCorona.png';
+
+            document.body.appendChild(presudoLink);
+            presudoLink.click();
+            document.body.removeChild(presudoLink);
+        }
+        function generate() {
+            $("#generated").css("height", "720px");
+            const canvas = document.getElementById("generated");
+            const imageFile = document.getElementById("inputGambar").files[0];
+            if (imageFile == undefined) return alert("Mohon pilih gambar terlebih dahulu!");
+            const uploadedImage = new Image();
+            const reader = new FileReader();
+
+            if (imageFile) {
+                reader.readAsDataURL(imageFile);
+            }
+            reader.onload = function (e) {
+                uploadedImage.src = reader.result;
+                uploadedImage.onload = function () {
+                    let ctx = canvas.getContext("2d");
+                    ctx.drawImage(uploadedImage, 0, 0);
+                    ctx.drawImage(base_img, 0, 0);
+                    $("#download-btn").show();
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
