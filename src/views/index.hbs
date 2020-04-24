@@ -13,7 +13,7 @@
         }
 
         canvas {
-            width: 720px;
+            width: 360px;
             height: 1px;
         }
     </style>
@@ -83,7 +83,7 @@
             document.body.removeChild(presudoLink);
         }
         function generate() {
-            $("#generated").css("height", "720px");
+            $("#generated").css("height", "360px");
             const canvas = document.getElementById("generated");
             const imageFile = document.getElementById("inputGambar").files[0];
             if (imageFile == undefined) return alert("Mohon pilih gambar terlebih dahulu!");
