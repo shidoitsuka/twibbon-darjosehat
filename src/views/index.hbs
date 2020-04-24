@@ -98,7 +98,7 @@
                 uploadedImage.src = reader.result;
                 uploadedImage.onload = function () {
                     let ctx = canvas.getContext("2d");
-                    ctx.drawImage(uploadedImage, 0, 0);
+                    ctx.drawImage(uploadedImage, 0, 0, 1080 * uploadedImage.width / uploadedImage.height, 1080);
                     ctx.drawImage(base_img, 0, 0);
                     $("#download-btn").show();
                 }
