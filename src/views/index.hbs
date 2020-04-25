@@ -33,13 +33,13 @@
         <h4 class="text-center">Agar hasil maksimal, gunakan foto berskala 1:1.</h4>
         <hr />
         <div class="row d-flex justify-content-center">
-            <div class="col-5">
+            <div class="col-12 col-lg-5">
                 <div class="input-group">
                     <div class="input-group-prepend upload-btn">
                         <span class="input-group-text upload-btn" onclick="generate();">Upload</span>
                     </div>
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputGambar" />
+                        <input type="file" class="custom-file-input" id="inputGambar" accept="image/*" />
                         <label class="custom-file-label">Choose file</label>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
             $("#download-btn").hide();
         });
         let base_img = new Image();
-        base_img.src = "/assets/twibbon.png";
+        base_img.src = "/assets/twibbon2.png";
         function downloadImage() {
             const canvas = document.getElementById("generated");
             const imageToDownload = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
