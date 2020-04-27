@@ -4,7 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Darjo Sehat</title>
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+    <title>Twibbon #LawanCorona</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/css/mdb.min.css" rel="stylesheet">
     <style>
         .custom-file,
         #inputGambar,
@@ -16,24 +25,25 @@
             width: 360px;
             height: 1px;
         }
+
+        .slider {
+            display: none;
+        }
+
+        .download-btn {
+            display: none;
+            margin-bottom: 1rem;
+        }
     </style>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <!-- Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-    <!-- Bootstrap core CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Material Design Bootstrap -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/css/mdb.min.css" rel="stylesheet">
 </head>
 
 <body>
     <div class="container">
         <h1 class="text-center">Lawan Corona by Darjo Sehat</h1>
-        <h4 class="text-center">Agar hasil maksimal, gunakan foto berskala 1:1.</h4>
+        <h6 class="text-center">Agar hasil maksimal, gunakan foto berskala 1:1.</h6>
         <hr />
         <div class="row d-flex justify-content-center">
-            <div class="col-12 col-lg-5">
+            <div class="col-12 col-lg-5 form-input">
                 <div class="input-group">
                     <div class="input-group-prepend upload-btn">
                         <span class="input-group-text upload-btn" onclick="generate();">Upload</span>
@@ -45,12 +55,18 @@
                 </div>
             </div>
             <div class="col-12 d-flex justify-content-center">
-                <button onclick="downloadImage();" type="button" id="download-btn" class="btn btn-primary px-3"><i
-                        class="fas fa-file-download"></i>
-                    Download</button>
+                <button onclick="downloadImage();" type="button" class="btn btn-primary px-3 download-btn"><i class="fas fa-file-download"></i> Download</button>
             </div>
             <div class="col-12 d-flex justify-content-center">
                 <canvas id="generated" width="1080" height="1080"></canvas>
+            </div>
+            <div class="col-12 col-lg-6 text-center slider">
+                <label for="posX">Posisi X</label>
+                <input type="range" class="custom-range" step="0.5" min="0" max="100" id="posX" value="0" onchange="generate();" />
+            </div>
+            <div class="col-12 col-lg-6 text-center slider">
+                <label for="posY">Posisi Y</label>
+                <input type="range" class="custom-range" step="0.5" min="0" max="100" id="posY" value="0" onchange="generate();" />
             </div>
         </div>
     </div>
@@ -67,11 +83,9 @@
     <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/js/mdb.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $("#download-btn").hide();
-        });
         let base_img = new Image();
         base_img.src = "/assets/twibbon2.png";
+
         function downloadImage() {
             const canvas = document.getElementById("generated");
             const imageToDownload = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
@@ -83,11 +97,15 @@
             presudoLink.click();
             document.body.removeChild(presudoLink);
         }
+
         function generate() {
             $("#generated").css("height", "360px");
-            const canvas = document.getElementById("generated");
             const imageFile = document.getElementById("inputGambar").files[0];
             if (imageFile == undefined) return alert("Mohon pilih gambar terlebih dahulu!");
+            const canvas = document.getElementById("generated");
+            const posX = document.getElementById("posX");
+            const posY = document.getElementById("posY");
+            $(".form-input").hide();
             const uploadedImage = new Image();
             const reader = new FileReader();
 
@@ -97,10 +115,16 @@
             reader.onload = function (e) {
                 uploadedImage.src = reader.result;
                 uploadedImage.onload = function () {
+                    posX.max = uploadedImage.width;
+                    posY.max = uploadedImage.height;
+                    posX.min = uploadedImage.width - (uploadedImage.width * 2);
+                    posY.min = uploadedImage.height - (uploadedImage.height * 2);
                     let ctx = canvas.getContext("2d");
-                    ctx.drawImage(uploadedImage, 0, 0, 1080 * uploadedImage.width / uploadedImage.height, 1080);
+                    ctx.clearRect(0, 0, 1080, 1080);
+                    ctx.drawImage(uploadedImage, posX.value, posY.value, 1080 * uploadedImage.width / uploadedImage.height, 1080);
                     ctx.drawImage(base_img, 0, 0);
-                    $("#download-btn").show();
+                    $(".download-btn").show();
+                    $(".slider").show();
                 }
             }
         }
